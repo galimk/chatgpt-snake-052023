@@ -74,7 +74,17 @@ function startGame() {
     gameIntervalId = setInterval(gameLoop, snakeSpeed);
 }
 
-function endGame() { /* ... */ }
+function endGame() {
+    // Set game state to not running
+    isGameRunning = false;
+
+    // Clear the game loop interval
+    clearInterval(gameIntervalId);
+
+    // Display a message to the user
+    alert(`Game Over! Your final score is: ${score}`);
+}
+
 function handleKeyboardInput(e) { /* ... */ }
 function gameLoop() { /* ... */ }
 
