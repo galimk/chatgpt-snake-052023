@@ -85,7 +85,33 @@ function endGame() {
     alert(`Game Over! Your final score is: ${score}`);
 }
 
-function handleKeyboardInput(e) { /* ... */ }
+function handleKeyboardInput(e) {
+    if (!isGameRunning) return;
+
+    switch (e.key) {
+        case 'ArrowUp':
+            if (snakeDirection.y !== 1) {
+                snakeDirection = { x: 0, y: -1 };
+            }
+            break;
+        case 'ArrowDown':
+            if (snakeDirection.y !== -1) {
+                snakeDirection = { x: 0, y: 1 };
+            }
+            break;
+        case 'ArrowLeft':
+            if (snakeDirection.x !== 1) {
+                snakeDirection = { x: -1, y: 0 };
+            }
+            break;
+        case 'ArrowRight':
+            if (snakeDirection.x !== -1) {
+                snakeDirection = { x: 1, y: 0 };
+            }
+            break;
+    }
+}
+
 function gameLoop() { /* ... */ }
 
 // Event listeners
