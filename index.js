@@ -18,8 +18,42 @@ const gridElement = document.getElementById("grid");
 const scoreElement = document.getElementById("score");
 
 
-// Functions
-function initializeGame() { /* ... */ }
+function initializeGame() {
+    // Create the grid
+    gridElement.innerHTML = '';
+    gridElement.style.gridTemplateColumns = `repeat(${gridDimensions.columns}, ${cellSize}rem)`;
+    for (let i = 0; i < gridDimensions.rows * gridDimensions.columns; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        gridElement.appendChild(cell);
+    }
+
+    // Initialize the snake
+    snake = [
+        { x: initialSnakePosition.x, y: initialSnakePosition.y },
+        { x: initialSnakePosition.x, y: initialSnakePosition.y + 1 },
+        { x: initialSnakePosition.x, y: initialSnakePosition.y + 2 },
+    ];
+    snakeDirection = { ...initialSnakeDirection };
+    snakeSpeed = initialSnakeSpeed;
+
+    // Place the catchable point
+    placeCatchablePoint();
+}
+
+function placeCatchablePoint() {
+    while (true) {
+        const x = Math.floor(Math.random() * gridDimensions.columns);
+        const y = Math.floor(Math.random() * gridDimensions.rows);
+        const isCellOccupiedBySnake = snake.some((snakePart) => snakePart.x === x && snakePart.y === y);
+
+        if (!isCellOccupiedBySnake) {
+            catchablePoint = { x, y };
+            break;
+        }
+    }
+}
+
 function startGame() { /* ... */ }
 function endGame() { /* ... */ }
 function handleKeyboardInput(e) { /* ... */ }
