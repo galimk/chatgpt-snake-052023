@@ -54,7 +54,26 @@ function placeCatchablePoint() {
     }
 }
 
-function startGame() { /* ... */ }
+let gameIntervalId;
+
+function startGame() {
+    // Prevent multiple game loops from starting
+    if (isGameRunning) return;
+
+    // Set game state to running
+    isGameRunning = true;
+
+    // Reset and update the score
+    score = 0;
+    scoreElement.textContent = score;
+
+    // Initialize the game
+    initializeGame();
+
+    // Start the game loop
+    gameIntervalId = setInterval(gameLoop, snakeSpeed);
+}
+
 function endGame() { /* ... */ }
 function handleKeyboardInput(e) { /* ... */ }
 function gameLoop() { /* ... */ }
