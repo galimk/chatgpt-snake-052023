@@ -27,18 +27,6 @@ function initializeGame() {
         cell.className = 'cell';
         gridElement.appendChild(cell);
     }
-
-    // Initialize the snake
-    snake = [
-        { x: initialSnakePosition.x, y: initialSnakePosition.y },
-        { x: initialSnakePosition.x, y: initialSnakePosition.y + 1 },
-        { x: initialSnakePosition.x, y: initialSnakePosition.y + 2 },
-    ];
-    snakeDirection = { ...initialSnakeDirection };
-    snakeSpeed = initialSnakeSpeed;
-
-    // Place the catchable point
-    placeCatchablePoint();
 }
 
 function placeCatchablePoint() {
@@ -54,30 +42,32 @@ function placeCatchablePoint() {
     }
 }
 
-let gameIntervalId;
+let gameInterval;
 
 function startGame() {
-    // Prevent multiple game loops from starting
-    if (isGameRunning) return;
+    if (gameInterval) {
+        return;
+    }
 
-    // Set game state to running
-    isGameRunning = true;
+    // Set the initial position of the snake and catchable point
+    snake = [{ x: Math.floor(gridDimensions.columns / 2), y: Math.floor(gridDimensions.rows / 2) }];
+    placeCatchablePoint();
+    render();
 
-    // Reset and update the score
-    score = 0;
-    scoreElement.textContent = score;
+    // Set the initial direction and speed
+    snakeDirection = { x: 1, y: 0 };
+    snakeSpeed = initialSnakeSpeed;
 
     // Start the game loop
-    gameIntervalId = setInterval(gameLoop, snakeSpeed);
+    gameInterval = setInterval(gameLoop, 1000 / snakeSpeed);
 }
-
 
 function endGame() {
     // Set game state to not running
     isGameRunning = false;
 
     // Clear the game loop interval
-    clearInterval(gameIntervalId);
+    clearInterval(gameInterval);
 
     // Display a message to the user
     alert(`Game Over! Your final score is: ${score}`);
@@ -148,10 +138,35 @@ function gameLoop() {
     }
 }
 
+function getCell(x, y) {
+    const index = y * gridDimensions.columns + x;
+    return gridElement.children[index];
+}
+
+function render() {
+    // Clear the grid
+    gridElement.querySelectorAll('.cell').forEach((cell) => {
+        cell.classList.remove('snake', 'catchable-point');
+    });
+
+    // Render the snake
+    snake.forEach((segment) => {
+        const snakeCell = getCell(segment.x, segment.y);
+        snakeCell.classList.add('snake');
+    });
+
+    // Render the catchable point
+    const catchablePointCell = getCell(catchablePoint.x, catchablePoint.y);
+    catchablePointCell.classList.add('catchable-point');
+}
+
 // Initialize the game
 initializeGame();
 
 // Event listeners
-document.getElementById('start-game').addEventListener('click', startGame);
-document.getElementById('end-game').addEventListener('click', endGame);
+const startGameBtn = document.getElementById('start-game-btn');
+const endGameBtn = document.getElementById('end-game-btn');
+
+startGameBtn.addEventListener('click', startGame);
+endGameBtn.addEventListener('click', endGame);
 document.addEventListener('keydown', handleKeyboardInput);
