@@ -51,7 +51,13 @@ function startGame() {
     }
 
     // Set the initial position of the snake and catchable point
-    snake = [{ x: Math.floor(gridDimensions.columns / 2), y: Math.floor(gridDimensions.rows / 2) }];
+    const centerX = Math.floor(gridDimensions.columns / 2);
+    const centerY = Math.floor(gridDimensions.rows / 2);
+    snake = [
+        { x: centerX, y: centerY },
+        { x: centerX - 1, y: centerY },
+        { x: centerX - 2, y: centerY },
+    ];
     placeCatchablePoint();
     render();
 
@@ -128,7 +134,7 @@ function gameLoop() {
         placeCatchablePoint();
         snakeSpeed = Math.min(snakeSpeed + speedIncrement, maxSpeed);
         clearInterval(gameInterval);
-        gameInterval = setInterval(gameLoop, 1000 / speed);
+        gameInterval = setInterval(gameLoop, 1000 / snakeSpeed);
     } else {
         // Remove the tail if the catchable point was not caught
         snake.pop();
@@ -140,6 +146,16 @@ function gameLoop() {
     // Render the updated game state
     render();
 }
+
+function updateScore() {
+    // Get the current score from the DOM
+    const scoreElement = document.getElementById('score');
+
+    // Update the score
+    const currentScore = parseInt(scoreElement.textContent, 10);
+    scoreElement.textContent = currentScore + 1;
+}
+
 
 function isSnake(position) {
     return snake.some((segment) => segment.x === position.x && segment.y === position.y);

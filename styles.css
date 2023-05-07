@@ -70,7 +70,7 @@ button:hover {
 }
 
 /* Score counter styles */
-#score {
+#scoreContainer {
     margin-top: 1rem;
     font-size: 18px;
     font-weight: bold;
