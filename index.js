@@ -112,7 +112,44 @@ function handleKeyboardInput(e) {
     }
 }
 
-function gameLoop() { /* ... */ }
+function gameLoop() {
+    // Calculate the new head position
+    const newHeadPosition = {
+        x: snake[0].x + snakeDirection.x,
+        y: snake[0].y + snakeDirection.y,
+    };
+
+    // Check for collisions (walls or snake's body)
+    if (
+        newHeadPosition.x < 0 ||
+        newHeadPosition.x >= gridDimensions.columns ||
+        newHeadPosition.y < 0 ||
+        newHeadPosition.y >= gridDimensions.rows ||
+        snake.some((snakePart) => snakePart.x === newHeadPosition.x && snakePart.y === newHeadPosition.y)
+    ) {
+        endGame();
+        return;
+    }
+
+    // Add the new head position to the snake array
+    snake.unshift(newHeadPosition);
+
+    // Check if the snake has caught the catchable point
+    if (newHeadPosition.x === catchablePoint.x && newHeadPosition.y === catchablePoint.y) {
+        // Increment the score and update the UI
+        score++;
+        scoreElement.textContent = score;
+
+        // Place a new catchable point
+        placeCatchablePoint();
+
+        // Increase the snake's speed if desired (optional)
+    } else {
+        // Remove the tail position
+        snake.pop();
+    }
+}
+
 
 // Event listeners
 document.getElementById('start-game').addEventListener('click', startGame);
