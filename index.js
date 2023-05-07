@@ -4,9 +4,10 @@ const gridDimensions = { rows: 20, columns: 20 };
 const cellSize = gridSize / gridDimensions.rows;
 const initialSnakePosition = { x: Math.floor(gridDimensions.columns / 2), y: Math.floor(gridDimensions.rows / 2) };
 const initialSnakeDirection = { x: 0, y: -1 };
-const initialSnakeSpeed = 100; // In milliseconds
+const initialSnakeSpeed = 5; // In milliseconds
 const initialCatchablePointPosition = { x: Math.floor(Math.random() * gridDimensions.columns), y: Math.floor(Math.random() * gridDimensions.rows) };
-
+const speedIncrement = 1; // Increase the speed by 1 unit after each catch
+const maxSpeed = 15; // The maximum allowed speed
 let snake = [];
 let snakeDirection = { ...initialSnakeDirection };
 let snakeSpeed = initialSnakeSpeed;
@@ -73,69 +74,75 @@ function endGame() {
     alert(`Game Over! Your final score is: ${score}`);
 }
 
-function handleKeyboardInput(e) {
-    if (!isGameRunning) return;
-
-    switch (e.key) {
+function handleKeyboardInput(event) {
+    switch (event.key) {
         case 'ArrowUp':
-            if (snakeDirection.y !== 1) {
-                snakeDirection = { x: 0, y: -1 };
+            if (snakeDirection.y === 0) {
+                snakeDirection.x = 0;
+                snakeDirection.y = -1;
             }
             break;
         case 'ArrowDown':
-            if (snakeDirection.y !== -1) {
-                snakeDirection = { x: 0, y: 1 };
+            if (snakeDirection.y === 0) {
+                snakeDirection.x = 0;
+                snakeDirection.y = 1;
             }
             break;
         case 'ArrowLeft':
-            if (snakeDirection.x !== 1) {
-                snakeDirection = { x: -1, y: 0 };
+            if (snakeDirection.x === 0) {
+                snakeDirection.x = -1;
+                snakeDirection.y = 0;
             }
             break;
         case 'ArrowRight':
-            if (snakeDirection.x !== -1) {
-                snakeDirection = { x: 1, y: 0 };
+            if (snakeDirection.x === 0) {
+                snakeDirection.x = 1;
+                snakeDirection.y = 0;
             }
             break;
     }
 }
 
 function gameLoop() {
-    // Calculate the new head position
-    const newHeadPosition = {
+    const newHead = {
         x: snake[0].x + snakeDirection.x,
         y: snake[0].y + snakeDirection.y,
     };
 
-    // Check for collisions (walls or snake's body)
+    // Check for collisions with the grid boundaries or the snake itself
     if (
-        newHeadPosition.x < 0 ||
-        newHeadPosition.x >= gridDimensions.columns ||
-        newHeadPosition.y < 0 ||
-        newHeadPosition.y >= gridDimensions.rows ||
-        snake.some((snakePart) => snakePart.x === newHeadPosition.x && snakePart.y === newHeadPosition.y)
+        newHead.x < 0 ||
+        newHead.y < 0 ||
+        newHead.x >= gridDimensions.columns ||
+        newHead.y >= gridDimensions.rows ||
+        isSnake(newHead)
     ) {
         endGame();
         return;
     }
 
-    // Add the new head position to the snake array
-    snake.unshift(newHeadPosition);
-
     // Check if the snake has caught the catchable point
-    if (newHeadPosition.x === catchablePoint.x && newHeadPosition.y === catchablePoint.y) {
-        // Increment the score and update the UI
+    if (newHead.x === catchablePoint.x && newHead.y === catchablePoint.y) {
         score++;
-        scoreElement.textContent = score;
-
-        // Place a new catchable point
+        updateScore();
         placeCatchablePoint();
-
-        // Increase the snake's speed if desired (optional)
+        snakeSpeed = Math.min(snakeSpeed + speedIncrement, maxSpeed);
+        clearInterval(gameInterval);
+        gameInterval = setInterval(gameLoop, 1000 / speed);
     } else {
-        // Remove the tail position
+        // Remove the tail if the catchable point was not caught
         snake.pop();
     }
+
+    // Move the snake by adding the new head to the front
+    snake.unshift(newHead);
+
+    // Render the updated game state
+    render();
+}
+
+function isSnake(position) {
+    return snake.some((segment) => segment.x === position.x && segment.y === position.y);
 }
 
 function getCell(x, y) {
