@@ -3,6 +3,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     min-height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
@@ -14,6 +15,9 @@ body {
     display: grid;
     grid-gap: 1px;
     background-color: #333;
+    border: 4px solid #999;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .cell {
@@ -24,22 +28,30 @@ body {
 
 /* Snake and catchable point styles */
 .snake {
-    background-color: #4caf50;
+    background-color: #666;
 }
 
 .catchable-point {
-    background-color: #f44336;
+    background-color: #333;
+}
+
+/* Container styles */
+#container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Button and score counter styles */
 #controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 1rem;
 }
 
 button {
-    background-color: #4caf50;
+    background-color: #999;
     border: none;
     color: white;
     text-align: center;
@@ -47,9 +59,20 @@ button {
     display: inline-block;
     font-size: 16px;
     padding: 10px 24px;
+    margin: 5px;
     cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #777;
+}
+
+/* Score counter styles */
+#score {
+    margin-top: 1rem;
+    font-size: 18px;
+    font-weight: bold;
+    color: #666;
 }

@@ -67,12 +67,10 @@ function startGame() {
     score = 0;
     scoreElement.textContent = score;
 
-    // Initialize the game
-    initializeGame();
-
     // Start the game loop
     gameIntervalId = setInterval(gameLoop, snakeSpeed);
 }
+
 
 function endGame() {
     // Set game state to not running
@@ -150,6 +148,8 @@ function gameLoop() {
     }
 }
 
+// Initialize the game
+initializeGame();
 
 // Event listeners
 document.getElementById('start-game').addEventListener('click', startGame);
