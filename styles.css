@@ -76,3 +76,8 @@ button:hover {
     font-weight: bold;
     color: #666;
 }
+
+.snake,
+.catchable-point {
+    transition: all 0.15s ease-out;
+}

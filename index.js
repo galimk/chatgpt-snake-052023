@@ -47,7 +47,8 @@ let gameInterval;
 
 function startGame() {
     if (gameInterval) {
-        return;
+        clearInterval(gameInterval);
+        gameInterval = null;
     }
 
     // Set the initial position of the snake and catchable point
@@ -70,15 +71,28 @@ function startGame() {
 }
 
 function endGame() {
-    // Set game state to not running
-    isGameRunning = false;
+    if (!gameInterval) {
+        return;
+    }
 
-    // Clear the game loop interval
+    // Clear the game interval
     clearInterval(gameInterval);
+    gameInterval = null;
 
-    // Display a message to the user
-    alert(`Game Over! Your final score is: ${score}`);
+    // Show the final score
+    const scoreElement = document.getElementById('score');
+    alert(`Game Over! Your final score is: ${scoreElement.textContent}`);
+
+    // Reset the grid
+    snake = [];
+    catchablePoint = null;
+    render();
+
+    // Set the initial score
+    scoreElement.textContent = '0';
 }
+
+
 
 function handleKeyboardInput(event) {
     switch (event.key) {
