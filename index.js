@@ -61,6 +61,7 @@ function startGame() {
     ];
     placeCatchablePoint();
     render();
+    resetScore();
 
     // Set the initial direction and speed
     snakeDirection = { x: 1, y: 0 };
@@ -87,6 +88,8 @@ function endGame() {
     snake = [];
     catchablePoint = null;
     render();
+
+    resetScore();
 
     // Set the initial score
     scoreElement.textContent = '0';
@@ -193,9 +196,17 @@ function render() {
     });
 
     // Render the catchable point
-    const catchablePointCell = getCell(catchablePoint.x, catchablePoint.y);
-    catchablePointCell.classList.add('catchable-point');
+    if (catchablePoint) {
+        const catchablePointCell = getCell(catchablePoint.x, catchablePoint.y);
+        catchablePointCell.classList.add('catchable-point');
+    }
 }
+
+function resetScore() {
+    const scoreElement = document.getElementById('score');
+    scoreElement.textContent = '0';
+}
+
 
 // Initialize the game
 initializeGame();
