@@ -1,6 +1,6 @@
 // Global variables and constants
-const gridSize = 20;
-const gridDimensions = { rows: 20, columns: 20 };
+const gridSize = 30;
+const gridDimensions = { rows: 30, columns: 30 };
 const cellSize = gridSize / gridDimensions.rows;
 const initialSnakePosition = { x: Math.floor(gridDimensions.columns / 2), y: Math.floor(gridDimensions.rows / 2) };
 const initialSnakeDirection = { x: 0, y: -1 };
@@ -14,7 +14,7 @@ let snakeSpeed = initialSnakeSpeed;
 let catchablePoint = { ...initialCatchablePointPosition };
 let isGameRunning = false;
 let score = 0;
-const collisionTolerance = 3;
+const collisionTolerance = 5;
 let collisionCount = 0;
 
 
