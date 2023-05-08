@@ -14,6 +14,9 @@ let snakeSpeed = initialSnakeSpeed;
 let catchablePoint = { ...initialCatchablePointPosition };
 let isGameRunning = false;
 let score = 0;
+const collisionTolerance = 3;
+let collisionCount = 0;
+
 
 const gridElement = document.getElementById("grid");
 const scoreElement = document.getElementById("score");
@@ -127,41 +130,55 @@ function handleKeyboardInput(event) {
 }
 
 function gameLoop() {
+    clearInterval(gameInterval);
+
     const newHead = {
         x: snake[0].x + snakeDirection.x,
-        y: snake[0].y + snakeDirection.y,
+        y: snake[0].y + snakeDirection.y
     };
 
-    // Check for collisions with the grid boundaries or the snake itself
-    if (
-        newHead.x < 0 ||
-        newHead.y < 0 ||
-        newHead.x >= gridDimensions.columns ||
-        newHead.y >= gridDimensions.rows ||
-        isSnake(newHead)
-    ) {
-        endGame();
-        return;
-    }
+    // Check if the snake has collided with itself or the grid boundaries
+    if (isSnake(newHead) || isOutOfBounds(newHead)) {
+        // Increment the collision count
+        collisionCount++;
 
-    // Check if the snake has caught the catchable point
-    if (newHead.x === catchablePoint.x && newHead.y === catchablePoint.y) {
-        score++;
-        updateScore();
-        placeCatchablePoint();
-        snakeSpeed = Math.min(snakeSpeed + speedIncrement, maxSpeed);
-        clearInterval(gameInterval);
-        gameInterval = setInterval(gameLoop, 1000 / snakeSpeed);
+        // End the game if the collision count exceeds the collision tolerance
+        if (collisionCount > collisionTolerance) {
+            endGame();
+            return;
+        }
     } else {
-        // Remove the tail if the catchable point was not caught
-        snake.pop();
-    }
+        // Reset the collision count if no collision is detected
+        collisionCount = 0;
 
-    // Move the snake by adding the new head to the front
-    snake.unshift(newHead);
+        // Update the snake's position
+        snake.unshift(newHead);
+
+        // Remove the tail if the catchable point was not caught
+        if (newHead.x === catchablePoint.x && newHead.y === catchablePoint.y) {
+            placeCatchablePoint();
+            updateScore();
+        } else {
+            snake.pop();
+        }
+    }
 
     // Render the updated game state
     render();
+
+    // Schedule the next game loop iteration
+    gameInterval = setInterval(gameLoop, 1000 / snakeSpeed);
+}
+
+
+
+function isOutOfBounds(position) {
+    return (
+        position.x < 0 ||
+        position.y < 0 ||
+        position.x >= gridSize ||
+        position.y >= gridSize
+    );
 }
 
 function updateScore() {
